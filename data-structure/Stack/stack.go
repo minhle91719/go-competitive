@@ -34,3 +34,10 @@ func (se *StackElm) Pop() Node {
 	se.top = se.top.prev
 	return *data
 }
+
+func (se *StackElm) isEmpty() bool {
+	if se.top == nil {
+		return true
+	}
+	return false
+}

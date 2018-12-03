@@ -13,21 +13,18 @@ func NewNode(root int) *node {
 }
 
 func (n *node) AddNode(data int) {
-	// TODO: fix
-	tmp := n
-	if data < tmp.data {
-		if tmp.left == nil {
-			tmp.left = NewNode(data)
-
+	if data < n.data {
+		if n.left == nil {
+			n.left = NewNode(data)
 			return
 		}
-		tmp.left.AddNode(data)
+		n.left.AddNode(data)
 	} else {
-		if tmp.right == nil {
-			tmp.right = NewNode(data)
+		if n.right == nil {
+			n.right = NewNode(data)
 			return
 		}
-		tmp.right.AddNode(data)
+		n.right.AddNode(data)
 	}
 	return
 }
@@ -37,7 +34,6 @@ func DFSInOrder(root *node) (result []int) { // left -> root -> right
 	if tmp.left != nil {
 		result = append(result, DFSInOrder(tmp.left)...)
 	}
-	// root
 	result = append(result, tmp.data)
 	if tmp.right != nil {
 		result = append(result, DFSInOrder(tmp.right)...)

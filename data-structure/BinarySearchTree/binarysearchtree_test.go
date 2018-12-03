@@ -5,7 +5,6 @@ import (
 )
 
 func TestBinarySearchTree(t *testing.T) {
-
 	var root = NewNode(50)
 	root.AddNode(30)
 	root.AddNode(20)

@@ -1,45 +1,23 @@
 package binarysearchtree
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestAddNode(t *testing.T) {
-	// type args struct {
-	// 	data int
-	// }
-	// tests := []struct {
-	// 	name string
-	// 	n    *node
-	// 	args args
-	// }{
-	// 	// TODO: Add test cases.
-	// }
-	// for _, tt := range tests {
-	// 	t.Run(tt.name, func(t *testing.T) {
-	// 		tt.n.AddNode(tt.args.data)
-	// 	})
-	// }
+func TestBinarySearchTree(t *testing.T) {
 
-	var root = &node{
-		data: 1,
-		left: &node{
-			data: 7,
-			left: &node{
-				data: 2,
-			},
-			right: &node{
-				data: 6,
-			},
-		},
-		right: &node{
-			data: 8,
-		},
+	var root = NewNode(50)
+	root.AddNode(30)
+	root.AddNode(20)
+	root.AddNode(40)
+	root.AddNode(70)
+	root.AddNode(60)
+	root.AddNode(80)
+	data := DFSInOrder(root)
+	result := []int{20, 30, 40, 50, 60, 70, 80}
+	for i := range data {
+		if data[i] != result[i] {
+			t.FailNow()
+		}
 	}
-	// var listleaf = []int{2, 7, 6, 8}
-	// for _, v := range listleaf {
-	// 	root.AddNode(v)
-	// }
-	fmt.Println(DFSInOrder(root))
 }

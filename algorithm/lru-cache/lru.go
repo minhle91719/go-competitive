@@ -12,8 +12,9 @@ type Node struct {
 	key         string
 	value       typeData
 	timeCreated time.Time
-	next        *Node
-	prev        *Node
+	// time add elemet to cache
+	next *Node
+	prev *Node
 }
 type LRUCache struct {
 	size  uint64
@@ -21,7 +22,6 @@ type LRUCache struct {
 
 	head *Node
 	tail *Node
-	// time add cache
 }
 
 func NewNode(key string, value typeData) *Node {
@@ -37,16 +37,14 @@ func (n *Node) setNext(nNext *Node) {
 		n.next = nil
 		return
 	}
-	nNext.prev = n
-	n.next = nNext
+	nNext.prev, n.next = n, nNext
 }
 func (n *Node) setPrev(nPrev *Node) {
 	if nPrev == nil {
 		n.prev = nil
 		return
 	}
-	nPrev.next = n
-	n.prev = nPrev
+	nPrev.next, n.prev = n, nPrev
 }
 func (n *Node) setValue(value typeData) {
 	n.value = value
@@ -77,6 +75,7 @@ func (lru *LRUCache) Set(key string, value typeData) {
 		atomic.AddUint64(&lru.size, 1)
 	}
 	lru.movetoEnd(node)
+	lru.checkSize()
 }
 func (lru *LRUCache) removeHead() {
 	if lru.head != nil {

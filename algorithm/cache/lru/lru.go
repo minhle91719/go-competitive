@@ -1,16 +1,16 @@
-package cache
+package lru
 
 import (
+	"sync"
 	"sync/atomic"
 	"time"
 )
 
 const MaxCacheElement uint64 = 1000000
 
-type typeData string
 type Node struct {
 	key         string
-	value       typeData
+	value       interface{}
 	timeCreated time.Time
 	// time add elemet to cache
 	next *Node
@@ -22,9 +22,11 @@ type LRUCache struct {
 
 	head *Node
 	tail *Node
+
+	mu sync.RWMutex
 }
 
-func NewNode(key string, value typeData) *Node {
+func NewNode(key string, value interface{}) *Node {
 	n := &Node{
 		key:         key,
 		value:       value,
@@ -46,7 +48,7 @@ func (n *Node) setPrev(nPrev *Node) {
 	}
 	nPrev.next, n.prev = n, nPrev
 }
-func (n *Node) setValue(value typeData) {
+func (n *Node) setValue(value interface{}) {
 	n.value = value
 	n.timeCreated = time.Now()
 }
@@ -57,12 +59,17 @@ func NewLRUCache() *LRUCache {
 		cache: make(map[string]*Node),
 		head:  nil,
 		tail:  nil,
+		mu:    sync.RWMutex{},
 	}
 }
-func (lru *LRUCache) Get(key string) Node {
-	return *lru.cache[key]
+func (lru *LRUCache) Get(key string) interface{} {
+	var value interface{}
+	lru.mu.RLock()
+	value = lru.cache[key].value
+	lru.mu.RUnlock()
+	return value
 }
-func (lru *LRUCache) Set(key string, value typeData) {
+func (lru *LRUCache) Set(key string, value interface{}) {
 	// check value exist
 	var node *Node
 
